@@ -1,9 +1,6 @@
 import { ExtendedRecordMap, PageMap } from 'notion-types'
-import { ParsedUrlQuery } from 'querystring'
 
 export * from 'notion-types'
-
-export type NavigationStyle = 'default' | 'custom'
 
 export interface PageError {
   message?: string
@@ -17,11 +14,15 @@ export interface PageProps {
   error?: PageError
 }
 
-export interface Params extends ParsedUrlQuery {
-  pageId: string
+export interface Model {
+  id: string
+  userId: string
+
+  createdAt: number
+  updatedAt: number
 }
 
-export interface Site {
+export interface Site extends Model {
   name: string
   domain: string
 
@@ -37,6 +38,10 @@ export interface Site {
   // opengraph metadata
   description?: string
   image?: string
+
+  timestamp: Date
+
+  isDisabled: boolean
 }
 
 export interface SiteMap {
@@ -61,12 +66,19 @@ export interface PageUrlOverridesInverseMap {
   [pageId: string]: string
 }
 
-export interface NotionPageInfo {
-  pageId: string
-  title: string
-  image: string
-  imageObjectPosition: string
-  author: string
-  authorImage: string
-  detail: string
+export interface PreviewImage {
+  url: string
+  originalWidth: number
+  originalHeight: number
+  width: number
+  height: number
+  type: string
+  dataURIBase64: string
+
+  error?: string
+  statusCode?: number
+}
+
+export interface PreviewImageMap {
+  [url: string]: PreviewImage
 }

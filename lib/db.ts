@@ -1,14 +1,26 @@
-import Keyv from '@keyvhq/core'
-import KeyvRedis from '@keyvhq/redis'
+import * as firestore from '@google-cloud/firestore'
+import * as config from './config'
 
-import { isRedisEnabled, redisNamespace, redisUrl } from './config'
+export let db: firestore.Firestore = null
+export let images: firestore.CollectionReference = null
+export let pageviews: firestore.CollectionReference = null
+export let feedbacks: firestore.CollectionReference = null
 
-let db: Keyv
-if (isRedisEnabled) {
-  const keyvRedis = new KeyvRedis(redisUrl)
-  db = new Keyv({ store: keyvRedis, namespace: redisNamespace || undefined })
-} else {
-  db = new Keyv()
+export const collections = {
+  images: config.firebaseCollectionImages,
+  pageviews: config.firebaseCollectionPageviews,
+  feedbacks: config.firebaseCollectionFeedbacks
 }
 
-export { db }
+if (config.googleProjectId.length > 0) {
+  db = new firestore.Firestore({
+    projectId: config.googleProjectId,
+    credentials: config.googleApplicationCredentials
+  })
+
+  if (config.isPreviewImageSupportEnabled) {
+    images = db.collection(collections.images)
+  }
+  pageviews = db.collection(collections.pageviews)
+  feedbacks = db.collection(collections.feedbacks)
+}

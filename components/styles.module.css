@@ -45,8 +45,8 @@
 
 .footer {
   width: 100%;
-  max-width: 1100px;
-  margin: auto auto 0;
+  max-width: 1000px;
+  margin: auto auto 15px;
   padding: 8px;
 
   display: flex;
@@ -58,6 +58,25 @@
 .copyright {
   font-size: 80%;
   padding: 0.5em;
+  max-width: 40vw;
+  width: 100%;
+}
+
+.copyright > svg{
+  position: relative;
+  top: 1.5px;
+}
+
+.settings {
+  max-width: 20vw;
+  width: 100%;
+  text-align: center;
+}
+
+.social {
+  max-width: 40vw;
+  width: 100%;
+  text-align: right;
 }
 
 .settings,
@@ -89,38 +108,64 @@
   color: #2795e9;
 }
 
-.twitter:hover {
+.github:hover {
   color: #2795e9;
 }
 
-.mastodon:hover {
-  color: #5a4be1;
+/* 微信 footbar 样式 */
+.wechatPublicName:hover {
+  color: #2BA245;
+  
 }
 
-.zhihu:hover {
-  color: #0066ff;
+/* Notion footbar 样式 */
+.notionPublic:hover {
+  color: #975DBE;
 }
 
-.github:hover {
-  color: #c9510c;
+
+/* footbar tooltip */
+.tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  font-size: 15px;
+  background-color: #DDEDEA;
+  color: #0F7B6C;
+  text-align: center;
+  padding: 1px 0;
+  border-radius: 3px;
+
+  /* 定位 */
+  position: absolute;
+  z-index: 1;
 }
 
-.youtube:hover {
-  color: #ff0000;
-}
-
-.linkedin:hover {
-  color: #0077b5;
-}
-
-.newsletter:hover {
-  color: #777777;
+.github:hover > .tooltiptext,
+.wechatPublicName:hover > .tooltiptext,
+.notionPublic:hover > .tooltiptext {
+  visibility: visible;
+  width: 120px;
+  bottom: 70px;
 }
 
 .comments {
   width: 100%;
+  /* max-width: var(--notion-max-width); */
   margin-top: 2em;
   border-top: 1px solid var(--fg-color-0);
+}
+
+.utterances {
+  margin-top: 2em;
+  width: 100%;
+}
+
+@media only screen and (min-width: 567px) {
+  .utterances {
+    width: calc(100% + 60px);
+    position: relative;
+    left: -60px;
+  }
 }
 
 @media only screen and (max-width: 566px) {
@@ -128,16 +173,19 @@
     flex-direction: column;
   }
 
-  .footer > div {
+  .footer>div {
     margin-top: 1em;
+    max-width: fit-content;
   }
 
   .footer .settings {
     order: 1;
   }
+
   .footer .social {
     order: 2;
   }
+
   .footer .copyright {
     order: 3;
   }
@@ -190,14 +238,17 @@
 }
 
 @keyframes octocat-wave {
+
   0%,
   100% {
     transform: rotate(0);
   }
+
   20%,
   60% {
     transform: rotate(-25deg);
   }
+
   40%,
   80% {
     transform: rotate(10deg);
@@ -212,8 +263,4 @@
   .githubCorner .octoArm {
     animation: octocat-wave 560ms ease-in-out;
   }
-}
-
-.hidden {
-  visibility: hidden;
 }

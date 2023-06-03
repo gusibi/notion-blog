@@ -1,92 +1,58 @@
 import * as React from 'react'
-
-import { FaEnvelopeOpenText } from '@react-icons/all-files/fa/FaEnvelopeOpenText'
-import { FaGithub } from '@react-icons/all-files/fa/FaGithub'
-import { FaLinkedin } from '@react-icons/all-files/fa/FaLinkedin'
-import { FaMastodon } from '@react-icons/all-files/fa/FaMastodon'
-import { FaTwitter } from '@react-icons/all-files/fa/FaTwitter'
-import { FaYoutube } from '@react-icons/all-files/fa/FaYoutube'
-import { FaZhihu } from '@react-icons/all-files/fa/FaZhihu'
-import { IoMoonSharp } from '@react-icons/all-files/io5/IoMoonSharp'
-import { IoSunnyOutline } from '@react-icons/all-files/io5/IoSunnyOutline'
-
-import * as config from '@/lib/config'
-import { useDarkMode } from '@/lib/use-dark-mode'
-
+import { SiGithub, SiWechat, SiNotion } from 'react-icons/si'
+import { IoSunnyOutline, IoMoonSharp } from 'react-icons/io5'
+import { RiCopyrightFill } from 'react-icons/ri'
+import * as config from 'lib/config'
+import { footCounterList, copyRightFromYear } from 'site.config'
+import { ViewCounter } from './ViewCounter'
 import styles from './styles.module.css'
 
 // TODO: merge the data and icons from PageSocial with the social links in Footer
 
-export const FooterImpl: React.FC = () => {
+export const Footer: React.FC<{
+  pageId: string
+  isDarkMode: boolean
+  toggleDarkMode: () => void
+}> = ({ pageId, isDarkMode, toggleDarkMode }) => {
   const [hasMounted, setHasMounted] = React.useState(false)
-  const { isDarkMode, toggleDarkMode } = useDarkMode()
-
-  const onToggleDarkMode = React.useCallback(
+  const toggleDarkModeCb = React.useCallback(
     (e) => {
       e.preventDefault()
       toggleDarkMode()
     },
     [toggleDarkMode]
   )
+  // const isRootPage = pageId === rootNotionPageId
+  const needFootCounter = footCounterList.indexOf(pageId) !== -1
 
   React.useEffect(() => {
     setHasMounted(true)
   }, [])
 
+  const author = `${config.author}`
+
   return (
     <footer className={styles.footer}>
-      <div className={styles.copyright}>Copyright 2022 {config.author}</div>
+      <div className={styles.copyright}>
+        <RiCopyrightFill /> {copyRightFromYear ? copyRightFromYear + ' - ' : ''}
+        {new Date().getFullYear()} {'· ' + author + ' '}
+        {needFootCounter ? '· ' : ''}
+        {needFootCounter ? <ViewCounter slug={pageId} /> : ''}
+      </div>
 
-      <div className={styles.settings}>
-        {hasMounted && (
+      {hasMounted ? (
+        <div className={styles.settings}>
           <a
             className={styles.toggleDarkMode}
-            href='#'
-            role='button'
-            onClick={onToggleDarkMode}
-            title='Toggle dark mode'
+            onClick={toggleDarkModeCb}
+            title='Tottle dark mode'
           >
             {isDarkMode ? <IoMoonSharp /> : <IoSunnyOutline />}
           </a>
-        )}
-      </div>
+        </div>
+      ) : null}
 
       <div className={styles.social}>
-        {config.twitter && (
-          <a
-            className={styles.twitter}
-            href={`https://twitter.com/${config.twitter}`}
-            title={`Twitter @${config.twitter}`}
-            target='_blank'
-            rel='noopener noreferrer'
-          >
-            <FaTwitter />
-          </a>
-        )}
-
-        {config.mastodon && (
-          <a
-            className={styles.mastodon}
-            href={config.mastodon}
-            title={`Mastodon ${config.getMastodonHandle()}`}
-            rel='me'
-          >
-            <FaMastodon />
-          </a>
-        )}
-
-        {config.zhihu && (
-          <a
-            className={styles.zhihu}
-            href={`https://zhihu.com/people/${config.zhihu}`}
-            title={`Zhihu @${config.zhihu}`}
-            target='_blank'
-            rel='noopener noreferrer'
-          >
-            <FaZhihu />
-          </a>
-        )}
-
         {config.github && (
           <a
             className={styles.github}
@@ -95,48 +61,36 @@ export const FooterImpl: React.FC = () => {
             target='_blank'
             rel='noopener noreferrer'
           >
-            <FaGithub />
+            <span className={styles.tooltiptext}>@{config.github}</span>
+            <SiGithub />
           </a>
         )}
-
-        {config.linkedin && (
+        {config.wechatPublicName && (
           <a
-            className={styles.linkedin}
-            href={`https://www.linkedin.com/in/${config.linkedin}`}
-            title={`LinkedIn ${config.author}`}
+            className={styles.wechatPublicName}
+            href={`${config.wechatPublicURL}`}
             target='_blank'
             rel='noopener noreferrer'
           >
-            <FaLinkedin />
+            <SiWechat />
+            <span className={styles.tooltiptext}>
+              公众号: {config.wechatPublicName}
+            </span>
           </a>
         )}
-
-        {config.newsletter && (
+        {config.notionPublic && (
           <a
-            className={styles.newsletter}
-            href={`${config.newsletter}`}
-            title={`Newsletter ${config.author}`}
+            className={styles.notionPublic}
+            href={`${config.notionPublic}`}
+            title='通过 Notion 打开'
             target='_blank'
             rel='noopener noreferrer'
           >
-            <FaEnvelopeOpenText />
-          </a>
-        )}
-
-        {config.youtube && (
-          <a
-            className={styles.youtube}
-            href={`https://www.youtube.com/${config.youtube}`}
-            title={`YouTube ${config.author}`}
-            target='_blank'
-            rel='noopener noreferrer'
-          >
-            <FaYoutube />
+            <SiNotion />
+            <span className={styles.tooltiptext}>从 Notion 打开</span>
           </a>
         )}
       </div>
     </footer>
   )
 }
-
-export const Footer = React.memo(FooterImpl)
