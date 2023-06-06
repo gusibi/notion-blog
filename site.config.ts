@@ -10,7 +10,7 @@ export default siteConfig({
 
   // basic site info (required)
   name: 'gusibi',
-  domain: 'blog.gusibi.mobi',
+  domain: 'gusibi-blog.vercel.app',
   author: 'gusibi',
 
   // open graph metadata (optional)
